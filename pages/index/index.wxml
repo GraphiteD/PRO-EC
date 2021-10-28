@@ -1,23 +1,82 @@
-<!--index.wxml-->
-<view class="container">
-  <view class="userinfo">
-    <block wx:if="{{canIUseOpenData}}" calss="userinfo-opendata">
-      <view class="userinfo-avatar" bindtap="bindViewTap">
-        <open-data type="userAvatarUrl"></open-data>
+<view class="pyg_index">
+
+  <!-- 搜索框 开始 -->
+  <SearchInput ></SearchInput>
+  <!-- 搜索框 结束 -->
+
+  <!-- 轮播图 开始 -->
+  <view class="index_swiper">
+    <!-- 
+      1 swiper标签存在默认高度和宽度
+        100% * 150px
+      2 图片标签存在默认高度和宽度
+        320px * 240px
+      3 设计图片和轮播图
+        1 先看原图比例和宽高 750*340
+        2 让图片的高度自适应 宽度等于100%
+        3 让swiper标签的高度 变成和图片一样
+      4 图片标签
+        mode属性 渲染模式
+          widthFix 让图片的标签宽高都等比例发生变化
+     -->
+    <swiper style='height:{{Hei}}'>
+      <swiper-item 
+      wx:for="{{swiperList}}"
+      wx:key="goods_id" 
+      >
+        <navigator url="{{item.navigator_url}}">
+          <image mode="widthFix" bindload='imgH' src="{{item.image_src}}"></image>
+        </navigator>
+      </swiper-item>
+    </swiper>
+      
+  </view>
+  <!-- 轮播图 结束 -->
+
+  <!-- 导航 开始 -->
+  <view class="index_cate">
+    <navigator 
+      wx:for="{{catesList}}"
+      wx:key="name"
+      url="/pages/category/index"
+      open-type="switchTab"
+    >
+    <image mode="widthFix" src="{{item.image_src}}"
+    />
+      
+    </navigator>
+  </view>
+  <!-- 导航 结束 -->
+
+  <!-- 楼层 开始 -->
+  <view class="index_floor">
+    <view class="floor_group"
+      wx:for="{{floorList}}"
+      wx:for-item="item1"
+      wx:for-index="index1"
+      wx:key="floor_title"
+    >
+      <!-- 标题 -->
+      <view class="floor_title">
+        <image mode="widthFix" src="{{item1.floor_title.image_src}}" />
+          
       </view>
-      <open-data type="userNickName"></open-data>
-    </block>
-    <block wx:elif="{{!hasUserInfo}}">
-      <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-      <button wx:elif="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-      <view wx:else> 请使用1.4.4及以上版本基础库 </view>
-    </block>
-    <block wx:else>
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-    </block>
+      <!-- 内容 -->
+      <view class="floor_list">
+          <navigator
+          wx:for="{{item1.product_list}}"
+          wx:for-item="item2"
+          wx:for-index="index2"
+          wx:key="name"
+          url="{{item2.navigator_url}}"
+          >
+          <image mode="{{index2===0?'widthFix':'scaleToFill'}}" src="{{item2.image_src}}" />
+              
+          </navigator>
+            
+      </view>
+    </view>
   </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
-  </view>
+    
+  <!-- 楼层 结束 -->
 </view>

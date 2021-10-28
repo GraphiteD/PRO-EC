@@ -1,48 +1,79 @@
-// index.js
-// 获取应用实例
-const app = getApp()
+// 0 引入用来发送请求的方法 一定要把路径补全
+import { request } from "../../request/index.js";
 
+//Page Object
 Page({
   data: {
-    motto: 'Hello World',
-    userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    canIUseGetUserProfile: false,
-    canIUseOpenData: wx.canIUse('open-data.type.userAvatarUrl') && wx.canIUse('open-data.type.userNickName') // 如需尝试获取用户信息可改为false
+    //轮播图数组
+    swiperList:[],
+    Hei:"340 rpx",
+    // 导航数组
+    catesList:[],
+    // 楼层数据
+    floorList:[]
   },
-  // 事件处理函数
-  bindViewTap() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
-  },
-  onLoad() {
-    if (wx.getUserProfile) {
-      this.setData({
-        canIUseGetUserProfile: true
-      })
-    }
-  },
-  getUserProfile(e) {
-    // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-    wx.getUserProfile({
-      desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-      success: (res) => {
-        console.log(res)
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
-      }
-    })
-  },
-  getUserInfo(e) {
-    // 不推荐使用getUserInfo获取用户信息，预计自2021年4月13日起，getUserInfo将不再弹出弹窗，并直接返回匿名的用户个人信息
-    console.log(e)
+  imgH:function(e){
+    var winWid = wx.getSystemInfoSync().windowWidth;         //获取当前屏幕的宽度
+    var imgh=e.detail.height;　　　　　　　　　　　　　　　　//图片高度
+    var imgw=e.detail.width;
+    var swiperH=winWid*imgh/imgw + "px"　　　　　　　　　　//等比设置swiper的高度。  即 屏幕宽度 / swiper高度 = 图片宽度 / 图片高度    ==》swiper高度 = 屏幕宽度 * 图片高度 / 图片宽度
     this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
+        Hei:swiperH　　　　　　　　//设置高度
     })
+},
+  //options(Object)
+  // 页面开始加载就会触发
+  onLoad: function(options) {
+    // // 1 发送异步请求获取轮播图数据 优化的手段可以通过es6的promise来解决回调地狱问题
+    // var reqTask = wx.request({
+    //   url: 'https://api-hmugo-web.itheima.net/api/public/v1/home/swiperdata',
+    //   // data: {},
+    //   // header: {'content-type':'application/json'},
+    //   // method: 'GET',
+    //   // dataType: 'json',
+    //   // responseType: 'text',
+    //   success: (result) => {
+    //     this.setData({
+    //       swiperList:result.data.message
+    //     })
+        
+    //   }
+    // });
+    this.getSwiperList();
+    this.getCateList();
+    this.getFloorList();
+  },
+
+  // 获取轮播图数据
+  getSwiperList(){
+    request({url:"/home/swiperdata"}) 
+    .then(result=>{
+          result.forEach((v, i) => {result[i].navigator_url = v.navigator_url.replace('main', 'index');});
+          this.setData({
+          swiperList:result
+      })
+    }) 
+  },
+
+  // 获取分类导航数据
+  getCateList(){
+    request({url:"/home/catitems"}) 
+    .then(result=>{
+          this.setData({
+          catesList:result
+      })
+    }) 
+  },
+
+  // 获取楼层数据
+  getFloorList(){
+    request({url:"/home/floordata"}) 
+    .then(result=>{
+          result.forEach(v =>v.product_list.forEach(a =>a.navigator_url=a.navigator_url.replace('?', '/index?')))
+          this.setData({
+          floorList:result
+      })
+    }) 
   }
 })
+  

@@ -1,10 +1,29 @@
-/**app.wxss**/
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 200rpx 0;
-  box-sizing: border-box;
-} 
+@import "./styles/iconfont.wxss";
+
+/* 微信小程序不支持通配符‘*’ */
+page,view,swiper,swiper-item,iamge,navigator{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* 主题颜色 通过变量实现
+1  less 中存在变量
+2  原生的css和wxss也支持这种变量
+*/
+page{
+    /* 定义主题颜色 */
+    --themeColor:#eb4450;
+
+    /* 定义统一的字体大小 设计稿假设是375px
+    1 px = 2 rpx
+    14 px = 28 rpx
+    */
+    font-size: 28rpx;
+}
+
+/* eb4450 */
+
+image{
+    width: 100%;
+}

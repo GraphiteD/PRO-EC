@@ -1,19 +1,22 @@
-// app.js
+//app.js
 App({
-  onLaunch() {
-    // 展示本地存储能力
-    const logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
-
-    // 登录
-    wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      }
-    })
+  //onLaunch,onShow: options(path,query,scene,shareTicket,referrerInfo(appId,extraData))
+  onLaunch: function(options) {
+    
   },
-  globalData: {
-    userInfo: null
+  onShow: function(options) {
+
+  },
+  onHide: function() {
+
+  },
+  onError: function(msg) {
+
+  },
+  //options(path,query,isEntryPage)
+  onPageNotFound: function(options) {
+
   }
-})
+
+});
+  
